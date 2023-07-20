@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SellerDaoJDBC implements SellerDao {
@@ -82,6 +83,73 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-        return null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement(
+                    "SELECT seller.*,department.Name as DepName "
+                            + "FROM seller INNER JOIN department "
+                            + "ON seller.DepartmentId = department.Id "
+
+                            + "ORDER BY Name");
+
+
+            rs = st.executeQuery();
+
+            List <Seller> list = new ArrayList<>();
+            while (rs.next()) {
+                Department dep = instantietDepartment(rs);
+                Seller obj = instantietSeller(rs, dep);
+                list.add(obj);
+            }
+            return list;
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+
+
+
+    }
+
+    @Override
+    public List<Seller> findByDepartmente(Department departmente) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement(
+                    "SELECT seller.*,department.Name as DepName "
+                    + "FROM seller INNER JOIN department "
+                    + "ON seller.DepartmentId = department.Id "
+                    + "WHERE DepartmentId = ? "
+                    + "ORDER BY Name");
+
+            st.setInt(1, departmente.getId());
+            rs = st.executeQuery();
+
+            List <Seller> list = new ArrayList<>();
+            while (rs.next()) {
+                Department dep = instantietDepartment(rs);
+                Seller obj = instantietSeller(rs, dep);
+                list.add(obj);
+            }
+            return list;
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+
+
+
+
+
     }
 }
