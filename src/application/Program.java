@@ -7,6 +7,7 @@ import models.entities.Seller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class Program {
@@ -33,6 +34,23 @@ public class Program {
 
         }
 
+//        System.out.println("\n==== TEST 04: seller insert ====");
+//        Seller newSeller = new Seller(null,"Clara Nunes","clara@gmail",new Date(),3500.,department);
+//        sellerDao.insert(newSeller);
+//        System.out.println("Inserted new Id = " + newSeller.getId() );
+
+
+        System.out.println("\n==== TEST 05: seller updat ====");
+        seller = sellerDao.findById(12);
+        seller.setName("Maria Carolina");
+        seller.setEmail("maria@gmail");
+
+        sellerDao.update(seller);
+        System.out.println("Update completed!" );
+
+        System.out.println("\n==== TEST 06: seller deleted ====");
+        sellerDao.deleteById(9);
+        System.out.println("Delete Completed");
 
     }
 }
